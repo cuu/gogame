@@ -1,13 +1,24 @@
 package color
 
-//import "github.com/veandco/go-sdl2/sdl"
-
+import (
+	"github.com/veandco/go-sdl2/sdl"
+)
 
 type Color struct {
 	R uint32
 	G uint32
 	B uint32
 	A uint32
+}
+
+func (c *Color) ToSDL() sdl.Color {
+	sdl_color := sdl.Color{0,0,0,0}
+
+	sdl_color.R = uint8(c.R)
+	sdl_color.G = uint8(c.G)
+	sdl_color.B = uint8(c.B)
+	sdl_color.A = uint8(c.A)
+	return sdl_color
 }
 
 func (c *Color) ToHex() int {

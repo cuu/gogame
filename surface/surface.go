@@ -7,6 +7,15 @@ import (
 )
 
 
+func GetWidth(s *sdl.Surface) int {
+	return int(s.W)
+}
+
+func GetHeight(s *sdl.Surface) int {
+	return int(s.H)
+}
+
+
 func Fill(surface *sdl.Surface, col color.Color) {
 
 	rect := sdl.Rect{0,0,0,0}
