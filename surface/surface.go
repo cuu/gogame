@@ -41,7 +41,7 @@ func Surface(w,h int) *sdl.Surface {
 	Rmask := 0x000000ff
 	Gmask := 0x0000ff00
 	Bmask := 0x00ff0000
-	Amask := 0xff000000
+	Amask := uint32(0xff000000)
 	
 	flags := 0
 	depth := 32
