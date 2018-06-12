@@ -1,6 +1,8 @@
 package display
 
 import (
+	"os"
+	
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/cuu/gogame"
 	"github.com/cuu/gogame/surface"
@@ -38,9 +40,15 @@ func SetMode(w,h,flags,depth int32) *sdl.Surface {
 	AssertInited()
 	
 	sdl.Do(func() {
-		window, err = sdl.CreateWindow("gogame", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
-			w, h, uint32( gogame.SHOWN | flags))
-	
+		video_centered := os.Getenv("SDL_VIDEO_CENTERED")
+		if video_centered == "1" {
+			window, err = sdl.CreateWindow("gogame", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
+				w, h, uint32( gogame.SHOWN | flags))
+		}else {
+			window, err = sdl.CreateWindow("gogame", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
+				w, h, uint32( gogame.SHOWN | flags))
+		}
+		
 		if err != nil {
 			panic(err)
 		}
