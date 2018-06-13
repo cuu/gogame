@@ -263,37 +263,56 @@ type Event struct {
 	Data map[string]string
 }
 
-func map_events( event sdl.Event) Event {
-	var ret Event
-		if event != nil {
-			switch t := event.(type) {
-			case *sdl.QuitEvent:
-				ret.Type  = QUIT
-			case *sdl.KeyboardEvent:
-				if t.Type == sdl.KEYDOWN {
-					ret.Type = KEYDOWN
-				}
-				
-				if t.Type == sdl.KEYUP {
-					ret.Type = KEYUP
-				}
-				
-				ret.Data = make(map[string]string)
-				ret.Data["Repeat"]= strconv.Itoa( int(t.Repeat) )
-				ret.Data["Key"] = sdlKeyDict[ int(t.Keysym.Sym) ]
-				ret.Data["Mod"] = strconv.Itoa( int(t.Keysym.Mod) )
-				
-			default:
-//				fmt.Printf("unknow type %T\n", t)
-				ret.Type = NOEVENT
-			}
-		}
+var TheEvent *Event
 
+func (self *Event) Clear() {
+	self.Type = NOEVENT
+	self.Data["Repeat"] =""
+	self.Data["Key"] = ""
+	self.Data["Mod"] = ""
+	
+}
+
+func init() {
+	TheEvent := &Event{}
+	TheEvent.Type =NOEVENT
+	TheEvent.Data = make(map[string]string)
+
+	TheEvent.Clear()
+}
+
+
+func map_events( event sdl.Event) *Event {
+	ret := TheEvent
+	if event != nil {
+		ret.Clear()
+		switch t := event.(type) {
+		case *sdl.QuitEvent:
+			ret.Type  = QUIT
+		case *sdl.KeyboardEvent:
+			if t.Type == sdl.KEYDOWN {
+				ret.Type = KEYDOWN
+			}
+			
+			if t.Type == sdl.KEYUP {
+				ret.Type = KEYUP
+			}
+			
+			ret.Data["Repeat"]= strconv.Itoa( int(t.Repeat) )
+			ret.Data["Key"] = sdlKeyDict[ int(t.Keysym.Sym) ]
+			ret.Data["Mod"] = strconv.Itoa( int(t.Keysym.Mod) )
+			
+		default:
+			//				fmt.Printf("unknow type %T\n", t)
+			ret.Type = NOEVENT
+		}
+	}
+	
 	return ret
 }
 
-func Poll() Event {
-	var ret Event
+func Poll() *Event {
+	var ret *Event
 	
 	sdl.Do(func() {
 		event := sdl.PollEvent()
@@ -303,8 +322,8 @@ func Poll() Event {
 	return ret
 }
 
-func Wait() Event {
-	var ret Event
+func Wait() *Event {
+	var ret *Event
 	
 	event := sdl.WaitEvent()
 	ret = map_events(event)
