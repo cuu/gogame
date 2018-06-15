@@ -1,14 +1,20 @@
 package event
 
 import (
-//	"fmt"
+	"fmt"
+	"log"
 
+//	"os"
 	"strconv"
 	
 	"github.com/veandco/go-sdl2/sdl"
 	
 )
 
+const (
+	USEROBJECT_CHECK1 = 0xDEADBEEF
+	USEROBJECT_CHECK2 = 0xFEEDF00D
+)
 const (
 	NOEVENT = iota
 	QUIT
@@ -17,6 +23,17 @@ const (
 	USEREVENT
 
 )
+
+const (
+	RUNEVT = 1 // start from 1  ,add CUSTOM event id here ,also append AddCustomEvent  in init blow
+)
+
+type CustomEvs struct {
+	Type uint32
+	Data string
+}
+
+var CUSTOMEVS map[int]*CustomEvs
 
 var sdlKeyDict = map[int]string{
 sdl.K_UNKNOWN:"",
@@ -260,25 +277,67 @@ sdl.K_SLEEP:"Sleep",
 
 type Event struct {
 	Type uint32
+	Timestamp uint32         // timestamp of the event
+	WindowID  uint32         // the associated window, if any
+	Code      int32          // user defined event code
+	
 	Data map[string]string
 }
 
 var TheEvent *Event
+
+func (self *Event) GetTimestamp() uint32 {
+	return self.Timestamp
+}
+
+func (self *Event) GetType() uint32 {
+	return self.Type
+}
 
 func (self *Event) Clear() {
 	self.Type = NOEVENT
 	self.Data["Repeat"] =""
 	self.Data["Key"] = ""
 	self.Data["Mod"] = ""
+	self.Data["Msg"] = ""
+}
+
+func ResetCustomEventData(evid int) {
+	if _, ok := CUSTOMEVS[evid]; ok { //has one before
+		CUSTOMEVS[evid].Data = ""
+	}
+}
+
+func AddCustomEvent(evid int) {
+	if CUSTOMEVS == nil {
+		return
+	}
+
+	if evid <= 0 {
+		return
+	}
+
+	if _, ok := CUSTOMEVS[evid]; ok { //has one before
+		return
+	}
+
+	CUSTOMEVS[evid] = &CustomEvs{}
+	CUSTOMEVS[evid].Type = sdl.RegisterEvents(evid)
 	
 }
 
 func init() {
-	TheEvent := &Event{}
+	
+	TheEvent = &Event{}
 	TheEvent.Type =NOEVENT
 	TheEvent.Data = make(map[string]string)
 
 	TheEvent.Clear()
+
+	CUSTOMEVS = make(map[int]*CustomEvs)
+
+	AddCustomEvent(RUNEVT) // Append Custom event id as above 
+	
 }
 
 
@@ -287,6 +346,11 @@ func map_events( event sdl.Event) *Event {
 	if event != nil {
 		ret.Clear()
 		switch t := event.(type) {
+		case *sdl.UserEvent:
+			ret.Type = USEREVENT
+			idx:= int(t.Code)
+			ret.Data["Msg"] = CUSTOMEVS[idx].Data
+			ResetCustomEventData(idx)
 		case *sdl.QuitEvent:
 			ret.Type  = QUIT
 		case *sdl.KeyboardEvent:
@@ -303,12 +367,40 @@ func map_events( event sdl.Event) *Event {
 			ret.Data["Mod"] = strconv.Itoa( int(t.Keysym.Mod) )
 			
 		default:
-			//				fmt.Printf("unknow type %T\n", t)
+//			fmt.Printf("unknow type %T\n", t)
 			ret.Type = NOEVENT
 		}
 	}
 	
 	return ret
+}
+
+func Post(event_name int, dict string ) {
+
+	var event_type uint32
+	
+	if val,ok := CUSTOMEVS[event_name]; ok {
+		event_type = val.Type
+		CUSTOMEVS[event_name].Data = dict
+	}
+
+	if event_type <= 0 {
+		log.Fatalf("event_type error %d\n", event_type)
+		return
+	}
+	
+	uev := &sdl.UserEvent{}
+	uev.Type = event_type
+	uev.Code = int32(event_name)
+
+	f,err := sdl.PushEvent(uev)
+
+	if err != nil {
+		log.Fatalf("PushEvent error %s",err)
+	}else {
+		fmt.Println("Filtered : ", f)
+	}
+	
 }
 
 func Poll() *Event {
@@ -330,3 +422,5 @@ func Wait() *Event {
 	
 	return ret
 }
+
+

@@ -10,7 +10,7 @@ import (
 
 //closed true => an additional line segment is drawn between the first and last points.
 //pointlist should be [][2] 
-func Lines(surf *sdl.Surface, col color.Color,closed bool, pointlist [][]int,width int) sdl.Rect {
+func Lines(surf *sdl.Surface, col *color.Color,closed bool, pointlist [][]int,width int) sdl.Rect {
 	length := len(pointlist)
 	if length < 2 {
 		panic("draw lines at least contains more than 1 points pair")
@@ -84,7 +84,7 @@ func Lines(surf *sdl.Surface, col color.Color,closed bool, pointlist [][]int,wid
 	
 }
 
-func Line(surf *sdl.Surface, col color.Color,x1,y1,x2,y2 ,width int) sdl.Rect {
+func Line(surf *sdl.Surface, col *color.Color,x1,y1,x2,y2 ,width int) sdl.Rect {
 	pts := make([]int,4)
 	pts[0] = x1
 	pts[1] = y1
@@ -136,7 +136,7 @@ func Line(surf *sdl.Surface, col color.Color,x1,y1,x2,y2 ,width int) sdl.Rect {
 }
 
 
-func clip_and_draw_line(surf *sdl.Surface, rect *sdl.Rect, col color.Color, pts []int)  int {
+func clip_and_draw_line(surf *sdl.Surface, rect *sdl.Rect, col *color.Color, pts []int)  int {
 	
 	if clipline(pts, int(rect.X),int(rect.Y),int(rect.X+ rect.W-1), int(rect.Y+rect.H-1) ) == 0 {
 		return 0
@@ -154,7 +154,7 @@ func clip_and_draw_line(surf *sdl.Surface, rect *sdl.Rect, col color.Color, pts 
 }
 
 
-func clip_and_draw_line_width(surf *sdl.Surface,rect *sdl.Rect,col color.Color,  width int, pts []int) int {
+func clip_and_draw_line_width(surf *sdl.Surface,rect *sdl.Rect,col *color.Color,  width int, pts []int) int {
 	loop := 0
 	xinc :=0
 	yinc :=0
@@ -319,7 +319,7 @@ func clipline(pts []int, left,top,right,bottom int)  int {
 	return draw
 }
 
-func drawline(surf *sdl.Surface, col color.Color, x1,y1,x2,y2 int) {
+func drawline(surf *sdl.Surface, col *color.Color, x1,y1,x2,y2 int) {
 	deltax := x2 - x1
 	deltay := y2 - y1
 
@@ -423,7 +423,7 @@ func drawline(surf *sdl.Surface, col color.Color, x1,y1,x2,y2 int) {
 	
 }
 
-func drawhorzline(surf *sdl.Surface, col color.Color, x1,y1,x2 int) {
+func drawhorzline(surf *sdl.Surface, col *color.Color, x1,y1,x2 int) {
 	if x1 == x2 {
 		pixel(surf,col,x1,y1)
 		return
@@ -471,7 +471,7 @@ func drawhorzline(surf *sdl.Surface, col color.Color, x1,y1,x2 int) {
 
 }
 
-func drawhorzlineclip(surf *sdl.Surface, col color.Color, x1 , y1, x2 int ) {
+func drawhorzlineclip(surf *sdl.Surface, col *color.Color, x1 , y1, x2 int ) {
 	if y1 < int(surf.ClipRect.Y) || y1 >= int( surf.ClipRect.Y + surf.ClipRect.H) {
 		return
 	}
@@ -494,7 +494,7 @@ func drawhorzlineclip(surf *sdl.Surface, col color.Color, x1 , y1, x2 int ) {
 	}
 }
 
-func drawvertline(surf *sdl.Surface, col color.Color, x1,y1,y2 int) {
+func drawvertline(surf *sdl.Surface, col *color.Color, x1,y1,y2 int) {
 	if y1 == y2 {
 		pixel(surf,col, x1,y1)
 	}

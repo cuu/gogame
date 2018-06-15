@@ -7,7 +7,7 @@ import (
 	
 )
 
-func Rect(surf *sdl.Surface,color color.Color, _rect *sdl.Rect, border_width int) {
+func Rect(surf *sdl.Surface,color *color.Color, _rect *sdl.Rect, border_width int) {
 	l := int(_rect.X)
 	r := int(_rect.X + _rect.W - 1)
 	t := int(_rect.Y)

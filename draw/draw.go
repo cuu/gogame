@@ -11,7 +11,7 @@ import (
 )
 
 
-func _aa_render_region(image *sdl.Renderer, _rect *sdl.Rect, col color.Color, rad int) {
+func _aa_render_region(image *sdl.Renderer, _rect *sdl.Rect, col *color.Color, rad int) {
 	corners := rect.Inflate(_rect,-2*rad-1, -2*rad-1)
 	topleft := []int{ int(corners.X),int(corners.Y)}
 	topright := []int{int(corners.X+corners.W-1), int(corners.Y)}
@@ -41,7 +41,7 @@ func _aa_render_region(image *sdl.Renderer, _rect *sdl.Rect, col color.Color, ra
 }
 
 //alpha of color should be 255 
-func AARoundRect(surf *sdl.Surface,_rect *sdl.Rect,col color.Color,rad,border int, inside color.Color) {
+func AARoundRect(surf *sdl.Surface,_rect *sdl.Rect,col *color.Color,rad,border int, inside *color.Color) {
 
 	image,_ := sdl.CreateSoftwareRenderer(surf)
 
@@ -60,7 +60,7 @@ func AARoundRect(surf *sdl.Surface,_rect *sdl.Rect,col color.Color,rad,border in
 	//image.Present()
 }
 
-func Point(surf *sdl.Surface, c color.Color, x,y int) {
+func Point(surf *sdl.Surface, c *color.Color, x,y int) {
 	pixels := surf.Pixels()
 	bytes_per_pixel := surf.BytesPerPixel()
 	

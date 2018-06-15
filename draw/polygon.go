@@ -10,7 +10,7 @@ import (
 	
 )
 
-func draw_fillpoly(surf *sdl.Surface, vx []int, vy []int, numpoints int, col color.Color) {
+func draw_fillpoly(surf *sdl.Surface, vx []int, vy []int, numpoints int, col *color.Color) {
 
 	miny:=0
 	maxy:=0
@@ -94,7 +94,7 @@ func draw_fillpoly(surf *sdl.Surface, vx []int, vy []int, numpoints int, col col
 	}
 }
 
-func Polygon(surf *sdl.Surface, color color.Color, points [][]int, border_width int) sdl.Rect {
+func Polygon(surf *sdl.Surface, color *color.Color, points [][]int, border_width int) sdl.Rect {
 
 	if border_width > 0 {
 		ret := Lines(surf, color, true,points,border_width)

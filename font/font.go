@@ -116,7 +116,7 @@ func LineSize(fnt *ttf.Font) int {
 
 
 //Only UTF8 
-func Render(fnt *ttf.Font,text string,antialias bool,col color.Color, background *color.Color) *sdl.Surface {
+func Render(fnt *ttf.Font,text string,antialias bool,col *color.Color, background *color.Color) *sdl.Surface {
 	/*
 	if antialias == true {
 		fnt.SetHinting(ttf.HINTING_MONO)

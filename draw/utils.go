@@ -35,7 +35,7 @@ func abs(n int) int {
 	return int(math.Abs(float64(n)))
 }
 
-func pixel(surf *sdl.Surface, c color.Color, x,y int) int {
+func pixel(surf *sdl.Surface, c *color.Color, x,y int) int {
 	pixels := surf.Pixels()
 	bytes_per_pixel := surf.BytesPerPixel()
 	
