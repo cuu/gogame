@@ -274,6 +274,18 @@ sdl.K_EJECT:"Eject",
 sdl.K_SLEEP:"Sleep",
 }
 
+type Filter struct {
+	
+}
+
+func (self *Filter) FilterEvent(e sdl.Event, userdata interface{}) bool {
+	if pause == true {
+		sdl.FlushEvent( sdl.KEYDOWN )
+		return false
+	}else {
+		return true
+	}
+}
 
 type Event struct {
 	Type uint32
@@ -283,6 +295,8 @@ type Event struct {
 	
 	Data map[string]string
 }
+
+var pause bool
 
 var TheEvent *Event
 
@@ -337,7 +351,11 @@ func init() {
 	CUSTOMEVS = make(map[int]*CustomEvs)
 
 	AddCustomEvent(RUNEVT) // Append Custom event id as above 
+
 	
+	f := &Filter{}
+	sdl.SetEventFilter(f,nil)
+
 }
 
 
@@ -403,6 +421,15 @@ func Post(event_name int, dict string ) {
 	
 }
 
+
+func Pause() {
+	pause = true	
+}
+
+func Resume() {
+	pause = false
+}
+
 func Poll() *Event {
 	var ret *Event
 	
@@ -417,9 +444,18 @@ func Poll() *Event {
 func Wait() *Event {
 	var ret *Event
 	
-	event := sdl.WaitEvent()
-	ret = map_events(event)
-	
+	if pause == false {
+		event := sdl.WaitEvent()
+		ret = map_events(event)
+	}else {
+		//fmt.Println("FlushEvent")
+		sdl.Do(func(){
+			sdl.FlushEvent(sdl.KEYDOWN)
+		})
+		TheEvent.Type = NOEVENT
+		ret = TheEvent
+	}
+		
 	return ret
 }
 

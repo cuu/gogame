@@ -21,6 +21,7 @@ func AssertInited() {
 }
 
 func Init() bool {
+	
 	sdl.Do(func() {
 		
 		if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
