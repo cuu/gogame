@@ -16,7 +16,7 @@ func GetHeight(s *sdl.Surface) int {
 }
 
 
-func Fill(surface *sdl.Surface, col color.Color) {
+func Fill(surface *sdl.Surface, col *color.Color) {
 
 	rect := sdl.Rect{0,0,0,0}
 

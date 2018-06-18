@@ -2,15 +2,18 @@ package transform
 
 
 import (
+	"fmt"
 	"log"
 	"errors"
+	"encoding/binary"
 	
 	"github.com/veandco/go-sdl2/sdl"
 //	"github.com/cuu/gogame/color"
 	
 )
 
-var Uint16Converter binary.LittleEndian.Uint16
+//var Endian binary.LittleEndian
+var  Uint16Converter =  binary.LittleEndian.Uint16
 
 func newsurf_fromsurf(surf *sdl.Surface, width ,height int) (*sdl.Surface,error) {
 	var newsurf *sdl.Surface
@@ -39,7 +42,7 @@ func newsurf_fromsurf(surf *sdl.Surface, width ,height int) (*sdl.Surface,error)
 	if err == nil {
 		newsurf.SetAlphaMod(alpha)
 	}
-	return newsurf
+	return newsurf,nil
 }
 
 func Stretch(src *sdl.Surface, dst *sdl.Surface) {
@@ -70,12 +73,12 @@ func Stretch(src *sdl.Surface, dst *sdl.Surface) {
 	case 1:
 		srcrow_addr = 0
 		dstrow_addr = 0
-		for looph := 0; looph <dstheight; looph++ {
+		for looph := 0; looph < int(dstheight); looph++ {
 			srcpix := srcrow_addr
 			dstpix := dstrow_addr
 			
 			w_err = srcwidth2 - dstwidth2
-			for loopw :=0; loopw < dstwidth; loopw++ {
+			for loopw :=0; loopw < int(dstwidth); loopw++ {
 				dstrow[dstpix] = srcrow[srcpix]
 				dstpix+=1
 				for w_err >= 0 {
@@ -86,21 +89,21 @@ func Stretch(src *sdl.Surface, dst *sdl.Surface) {
 			}
 
 			for h_err >= 0 {
-				srcrow_addr += srcpitch
+				srcrow_addr += int(srcpitch)
 				h_err -= dstheight2
 			}
-			dstrow_addr += dstpitch
+			dstrow_addr += int(dstpitch)
 			h_err += srcheight2
 		}
 		break
 	case 2:
 		srcrow_addr = 0
 		dstrow_addr = 0
-		for looph := 0; looph < dstheight; looph++ {
+		for looph := 0; looph < int(dstheight); looph++ {
 			srcpix := srcrow_addr
 			dstpix := dstrow_addr
 			w_err = srcwidth2 - dstwidth2
-			for loopw := 0; loopw < dstwidth; loopw ++ {
+			for loopw := 0; loopw < int(dstwidth); loopw ++ {
 				dstrow[dstpix]   = srcrow[srcpix]
 				dstrow[dstpix+1] = srcrow[srcpix+1]
 				dstpix+=2
@@ -111,21 +114,21 @@ func Stretch(src *sdl.Surface, dst *sdl.Surface) {
 				w_err += srcwidth2
 			}
 			for h_err >= 0 {
-				srcrow_addr += srcpitch
+				srcrow_addr += int(srcpitch)
 				h_err -= dstheight2
 			}
-			dstrow_addr += dstpitch
+			dstrow_addr += int(dstpitch)
 			h_err += srcheight2
 		}
 		break
 	case 3:
 		srcrow_addr = 0
 		dstrow_addr = 0
-		for looph := 0 ; looph < dstheight; looph++ {
+		for looph := 0 ; looph < int(dstheight); looph++ {
 			srcpix := srcrow_addr
 			dstpix := dstrow_addr
 			w_err = srcwidth2 - dstwidth2
-			for loopw := 0; loopw <dstwidth; loopw++ {
+			for loopw := 0; loopw <int(dstwidth); loopw++ {
 				dstrow[dstpix]   = srcrow[srcpix]
 				dstrow[dstpix+1] = srcrow[srcpix+1]
 				dstrow[dstpix+2] = srcrow[srcpix+2]
@@ -138,22 +141,22 @@ func Stretch(src *sdl.Surface, dst *sdl.Surface) {
 			}
 
 			for h_err >= 0 {
-				srcrow_addr += srcpitch
+				srcrow_addr += int(srcpitch)
 				h_err -= dstheight2
 			}
 
-			dstrow_addr += dstpitch
+			dstrow_addr += int(dstpitch)
 			h_err += srcheight2
 		}
 		break
 	case 4:
 		srcrow_addr = 0
 		dstrow_addr = 0
-		for looph := 0 ; looph < dstheight; looph++ {
+		for looph := 0 ; looph < int(dstheight); looph++ {
 			srcpix := srcrow_addr
 			dstpix := dstrow_addr
 			w_err = srcwidth2 - dstwidth2
-			for loopw := 0; loopw <dstwidth; loopw++ {
+			for loopw := 0; loopw <int(dstwidth); loopw++ {
 				dstrow[dstpix]   = srcrow[srcpix]
 				dstrow[dstpix+1] = srcrow[srcpix+1]
 				dstrow[dstpix+2] = srcrow[srcpix+2]
@@ -167,11 +170,11 @@ func Stretch(src *sdl.Surface, dst *sdl.Surface) {
 			}
 
 			for h_err >= 0 {
-				srcrow_addr += srcpitch
+				srcrow_addr += int(srcpitch)
 				h_err -= dstheight2
 			}
 
-			dstrow_addr += dstpitch
+			dstrow_addr += int(dstpitch)
 			h_err += srcheight2
 		}
 		break		
@@ -188,8 +191,8 @@ func Scale(src_surf *sdl.Surface, new_width ,new_height int )  *sdl.Surface {
 		panic("Cannot scale to negative size")
 	}
 	
-	newsurf := newsurf_fromsurf(src_surf,new_width,new_height)
-	if newsurf.W != new_width || newsurf.H != new_height {
+	newsurf,_ := newsurf_fromsurf(src_surf,new_width,new_height)
+	if int(newsurf.W) != new_width || int(newsurf.H) != new_height {
 		panic("Destination surface not the given width or height.")
 	}
 
@@ -210,45 +213,50 @@ func Scale(src_surf *sdl.Surface, new_width ,new_height int )  *sdl.Surface {
 
 
 func filter_shrink_X_ONLYC(srcpix []byte, dstpix []byte, height,srcpitch,dstpitch, srcwidth,dstwidth int  ) {
-
+	
 	srcdiff := srcpitch - (srcwidth * 4 )
 	dstdiff := dstpitch - (dstwidth * 4 )
 
+	//fmt.Println("srcpix len: ",len(srcpix), srcdiff)
+//	fmt.Println("dstpix len: ", len(dstpix), dstdiff)
+	
 	srcaddr := 0
 	dstaddr := 0
 	
 	xspace := 0x10000 * srcwidth/dstwidth // must be > 1
-	xrecip =  int(0x100000000 / xspace)
+	xrecip :=  int(0x100000000 / xspace)
 	for y := 0; y < height; y++ {
 		var accumulate [4]uint16
 		xcounter := xspace
 		for x:=0;x<srcwidth; x++ {
 			if xcounter > 0x10000 {
 
-				accumulate[0] += Uint16Converter(srcpix[srcaddr:srcaddr+2])
-				srcaddr += 2
-				accumulate[1] += Uint16Converter(srcpix[srcaddr:srcaddr+2])
-				srcaddr += 2
-				accumulate[2] += Uint16Converter(srcpix[srcaddr:srcaddr+2])
-				srcaddr += 2
-				accumulate[3] += Uint16Converter(srcpix[srcaddr:srcaddr+2])
-				srcaddr += 2				
+				pad:= 1
+				accumulate[0] += uint16(srcpix[srcaddr])
+				srcaddr += pad
+				accumulate[1] += uint16(srcpix[srcaddr])
+				srcaddr += pad
+				accumulate[2] += uint16(srcpix[srcaddr])
+				srcaddr += pad
+				accumulate[3] += uint16(srcpix[srcaddr])
+				srcaddr += pad
+				
 				xcounter -= 0x10000
 			} else {
 				xfrac := 0x10000 - xcounter
-				dstpixvalue := uint8( (( accumulate[0] + (int(srcpix[srcaddr]) *xcounter ) >> 16 ) * xrecip ) >> 16)
+				dstpixvalue := uint8( ((int(accumulate[0]) + (int(srcpix[srcaddr]) * xcounter ) >> 16) * xrecip ) >> 16 )
 				dstpix[dstaddr] = byte( dstpixvalue & 0xff)
 				dstaddr+=1
 				
-				dstpixvalue = uint8( (( accumulate[1] + (int(srcpix[srcaddr+1]) *xcounter ) >> 16 ) * xrecip ) >> 16)
+				dstpixvalue =  uint8( ((int(accumulate[1]) + (int(srcpix[srcaddr+1])*xcounter ) >> 16 ) * xrecip ) >> 16)
 				dstpix[dstaddr] = byte( dstpixvalue & 0xff )
 				dstaddr+=1
 
-				dstpixvalue = uint8( (( accumulate[2] + (int(srcpix[srcaddr+2]) *xcounter ) >> 16 ) * xrecip ) >> 16)
+				dstpixvalue = uint8( (( int(accumulate[2]) + (int(srcpix[srcaddr+2]) *xcounter ) >> 16 ) * xrecip ) >> 16)
 				dstpix[dstaddr] = byte(dstpixvalue & 0xff)
 				dstaddr+=1
 
-				dstpixvalue = uint8( (( accumulate[3] + (int(srcpix[srcaddr+3]) *xcounter ) >> 16 ) * xrecip ) >> 16)
+				dstpixvalue = uint8( (( int(accumulate[3]) + (int(srcpix[srcaddr+3]) *xcounter ) >> 16 ) * xrecip ) >> 16)
 				dstpix[dstaddr] = byte(dstpixvalue & 0xff)
 				dstaddr+=1
 
@@ -271,10 +279,16 @@ func filter_shrink_X_ONLYC(srcpix []byte, dstpix []byte, height,srcpitch,dstpitc
 }
 
 func filter_shrink_Y_ONLYC(srcpix []byte, dstpix []byte,  width,  srcpitch,  dstpitch, srcheight, dstheight int) {
-	var templine [dstpitch*2]uint16
+		
+	var templine []uint16
+	templine = make([]uint16, dstpitch*2)
 	srcdiff := srcpitch - (width * 4)
 	dstdiff := dstpitch - (width * 4)
-
+	/*
+	fmt.Println("srcpix len: ",len(srcpix), srcdiff)
+	fmt.Println("dstpix len: ", len(dstpix), dstdiff,dstpitch)
+	*/
+	
 	yspace := 0x10000 * srcheight/dstheight // must be > 1
 	yrecip := int(0x100000000 / yspace) // int may overflow
 	ycounter := yspace
@@ -285,45 +299,47 @@ func filter_shrink_Y_ONLYC(srcpix []byte, dstpix []byte,  width,  srcpitch,  dst
 	dstaddr := 0
 	
 	for y := 0; y < srcheight; y++ {
+		templine_addr = 0
 		if ycounter > 0x10000 {
 			for x:=0;x<width;x++ {
-				templine[templine_addr] += Uint16Converter(srcpix[srcaddr:srcaddr+2])
-				srcaddr+=2
-				templine_addr+=1
-				templine[templine_addr] += Uint16Converter(srcpix[srcaddr:srcaddr+2])
-				srcaddr+=2
-				templine_addr+=1
-				templine[templine_addr] += Uint16Converter(srcpix[srcaddr:srcaddr+2])
-				srcaddr+=2
-				templine_addr+=1
-				templine[templine_addr] += Uint16Converter(srcpix[srcaddr:srcaddr+2])
-				srcaddr+=2
-				templine_addr+=1				
+				pad:=1
+				templine[templine_addr] += uint16(srcpix[srcaddr])
+				srcaddr+=pad
+				templine_addr+=pad
+				templine[templine_addr] += uint16(srcpix[srcaddr])
+				srcaddr+=pad
+				templine_addr+=pad
+				templine[templine_addr] += uint16(srcpix[srcaddr])
+				srcaddr+=pad
+				templine_addr+=pad
+				templine[templine_addr] += uint16(srcpix[srcaddr])
+				srcaddr+=pad
+				templine_addr+=pad
 			}
 			ycounter -= 0x10000
 		}else {
 			yfrac := 0x10000 - ycounter
 			for x:=0; x< width; x++ {
 				
-				dstpixvalue := uint8( (( templine[templine_addr] + (int(srcpix[srcaddr]) *ycounter ) >> 16 ) * yrecip ) >> 16)
+				dstpixvalue := uint8( (( int(templine[templine_addr]) + (int(srcpix[srcaddr]) *ycounter ) >> 16 ) * yrecip ) >> 16)
 				dstpix[dstaddr] = byte(dstpixvalue & 0xff)
 				dstaddr+=1
 				srcaddr+=1
 				templine_addr +=1
 
-				dstpixvalue = uint8( (( templine[templine_addr] + (int(srcpix[srcaddr]) *ycounter ) >> 16 ) * yrecip ) >> 16)
+				dstpixvalue = uint8( (( int(templine[templine_addr]) + (int(srcpix[srcaddr]) *ycounter ) >> 16 ) * yrecip ) >> 16)
 				dstpix[dstaddr] = byte(dstpixvalue & 0xff)
 				dstaddr+=1
 				srcaddr+=1
 				templine_addr +=1
 
-				dstpixvalue = uint8( (( templine[templine_addr] + (int(srcpix[srcaddr]) *ycounter ) >> 16 ) * yrecip ) >> 16)
+				dstpixvalue = uint8( (( int(templine[templine_addr]) + (int(srcpix[srcaddr]) *ycounter ) >> 16 ) * yrecip ) >> 16)
 				dstpix[dstaddr] = byte( dstpixvalue & 0xff)
 				dstaddr+=1
 				srcaddr+=1
 				templine_addr +=1
 				
-				dstpixvalue = uint8( (( templine[templine_addr] + (int(srcpix[srcaddr]) *ycounter ) >> 16 ) * yrecip ) >> 16)
+				dstpixvalue = uint8( (( int(templine[templine_addr]) + (int(srcpix[srcaddr]) *ycounter ) >> 16 ) * yrecip ) >> 16)
 				dstpix[dstaddr] = byte( dstpixvalue & 0xff)
 				dstaddr+=1
 				srcaddr+=1
@@ -335,19 +351,19 @@ func filter_shrink_Y_ONLYC(srcpix []byte, dstpix []byte,  width,  srcpitch,  dst
 			srcaddr -= 4 * width
 
 			for x :=0; x<width;x++ {
-				templine[templine_addr] = uint16( (int(srcpix[srcaddr]) * xfrac) >> 16)
+				templine[templine_addr] = uint16( (int(srcpix[srcaddr]) * yfrac) >> 16)
 				templine_addr+=1
 				srcaddr += 1
 
-				templine[templine_addr] = uint16( (int(srcpix[srcaddr]) * xfrac) >> 16)
+				templine[templine_addr] = uint16( (int(srcpix[srcaddr]) * yfrac) >> 16)
 				templine_addr+=1
 				srcaddr += 1
 
-				templine[templine_addr] = uint16( (int(srcpix[srcaddr]) * xfrac) >> 16)
+				templine[templine_addr] = uint16( (int(srcpix[srcaddr]) * yfrac) >> 16)
 				templine_addr+=1
 				srcaddr += 1
 
-				templine[templine_addr] = uint16( (int(srcpix[srcaddr]) * xfrac) >> 16)
+				templine[templine_addr] = uint16( (int(srcpix[srcaddr]) * yfrac) >> 16)
 				templine_addr+=1
 				srcaddr += 1				
 			}
@@ -362,10 +378,12 @@ func filter_expand_X_ONLYC(srcpix []byte, dstpix []byte, height, srcpitch, dstpi
 	dstdiff := dstpitch - (dstwidth * 4 )
 	factorwidth := 4
 
-	var xidx0  [dstwidth*4]int
-	var xmult0 [dstwidth*factorwidth]int
-	var xmult1 [dstwidth*factorwidth]int
-
+	var xidx0  []int
+	xidx0 = make([]int, dstwidth*4)
+	var xmult0 []int
+	xmult0 = make([]int, dstwidth*factorwidth)
+	var xmult1 []int
+	xmult1 = make([]int, dstwidth*factorwidth)
 	/* Create multiplier factors and starting indices and put them in arrays */
 	for x:=0;x<dstwidth;x++ {
 		xidx0[x] = x*( srcwidth-1)/dstwidth
@@ -534,11 +552,12 @@ func scalesmooth(src *sdl.Surface, dst *sdl.Surface) {
 	
 	/* convert to 32-bit if necessary */
 	if bpp == 3 {
-		newpitch = srcwidth * 4
-		var newsrc [newpitch*srcheight]byte
-		convert_24_32(srcpix, srcpitch, newsrc, newpitch,srcwidth,srcheight)
+		newpitch := int(srcwidth * 4)
+		var newsrc []byte
+		newsrc = make([]byte,newpitch * int(srcheight))
+		convert_24_32(srcpix, int(srcpitch), newsrc, newpitch,int(srcwidth),int(srcheight))
 		srcpix = newsrc
-		srcpitch = newpitch
+		srcpitch = int32(newpitch)
 		/* create a destination buffer for the 32-bit result */
 		dstpitch = dstwidth << 2 // << 2 equal *4
 		dst32 = make([]byte, dstpitch*dstheight)
@@ -546,44 +565,44 @@ func scalesmooth(src *sdl.Surface, dst *sdl.Surface) {
 	}
 
 	if srcwidth != dstwidth && srcheight != dstheight {
-		tempwidth = dstwidth
-		temppitch = temppitch << 2
-		tempheight = srcheight
+		tempwidth = int(dstwidth)
+		temppitch = tempwidth << 2
+		tempheight = int(srcheight)
 		temppix = make([]byte,temppitch*tempheight)
 	}
 
 	/* Start the filter by doing X-scaling */
 	if dstwidth < srcwidth { // shrink 
 		if srcheight != dstheight {
-			filter_shrink_X(srcpix, temppix, srcheight,srcpitch, temppitch, srcwidth,dstwidth)
+			filter_shrink_X(srcpix, temppix, int(srcheight),int(srcpitch), temppitch, int(srcwidth),int(dstwidth))
 		}else {
-			filter_shrink_X(srcpix, dstpix,  srcheight,srcpitch, dstpitch,  srcwidth,dstwidth)
+			filter_shrink_X(srcpix, dstpix,  int(srcheight),int(srcpitch), int(dstpitch),  int(srcwidth),int(dstwidth))
 		}
 	}else if dstwidth > srcwidth { // expand
 		if srcheight != dstheight {
-			filter_expand_X(srcpix, temppix, srcheight,srcpitch, temppitch, srcwidth,dstwidth)
+			filter_expand_X(srcpix, temppix, int(srcheight),int(srcpitch), temppitch, int(srcwidth),int(dstwidth))
 		}else {
-			filter_expand_X(srcpix, dstpix,  srcheight,srcpitch, dstpitch,  srcwidth,dstwidth)
+			filter_expand_X(srcpix, dstpix,  int(srcheight),int(srcpitch), int(dstpitch),  int(srcwidth),int(dstwidth))
 		}	
 	}
 
 	/* Now do the Y scale */
 	if dstheight < srcheight {
 		if srcwidth != dstwidth {
-			filter_shrink_Y(temppix, dstpix, tempwidth, temppitch, dstpitch, srcheight, dstheight)
+			filter_shrink_Y(temppix, dstpix, tempwidth, temppitch, int(dstpitch),int( srcheight), int(dstheight))
 		}else{
-			filter_shrink_Y(srcpix, dstpix, srcwidth, srcpitch, dstpitch, srcheight, dstheight)
+			filter_shrink_Y(srcpix, dstpix, int(srcwidth), int(srcpitch), int(dstpitch), int(srcheight), int(dstheight))
 		}
 	}else if dstheight > srcheight {
 		if srcwidth != dstwidth {
-			filter_expand_Y(temppix, dstpix, tempwidth, temppitch, dstpitch, srcheight, dstheight)
+			filter_expand_Y(temppix, dstpix, tempwidth, temppitch, int(dstpitch), int(srcheight), int(dstheight))
 		}else {
-			filter_expand_Y(srcpix, dstpix, srcwidth, srcpitch, dstpitch, srcheight, dstheight)
+			filter_expand_Y(srcpix, dstpix, int(srcwidth), int(srcpitch),int(dstpitch), int(srcheight), int(dstheight))
 		}
 	}
 
 	if bpp == 3 {
-		convert_32_24(dst32, dstpitch, dst.Pixels(),dst.Pitch, dstwidth, dstheight)
+		convert_32_24(dst32, int(dstpitch), dst.Pixels(),int(dst.Pitch), int(dstwidth), int(dstheight))
 	}
 	
 }
@@ -601,9 +620,9 @@ func SmoothScale(src_surf *sdl.Surface, new_width, new_height int ) *sdl.Surface
 		panic("Only 24-bit or 32-bit surfaces can be smoothly scaled")
 	}
 
-	newsurf = newsurf_fromsurf(src_surf,new_width,new_height)
+	newsurf,_ := newsurf_fromsurf(src_surf,new_width,new_height)
 	
-	if newsurf.W != new_width || newsurf.H != new_height {
+	if int(newsurf.W) != new_width || int(newsurf.H) != new_height {
 		panic("Destination surface not the given width or height.")
 	}
 
@@ -611,7 +630,7 @@ func SmoothScale(src_surf *sdl.Surface, new_width, new_height int ) *sdl.Surface
 		panic("Source and destination surfaces need the same format.")
 	}
 
-	if ((new_width * bpp + 3) >> 2) > newsurf.Pitch {
+	if (( new_width * bpp + 3) >> 2) > int(newsurf.Pitch) {
 		panic("SDL Error: destination surface pitch not 4-byte aligned.")
 	}
 
@@ -622,15 +641,15 @@ func SmoothScale(src_surf *sdl.Surface, new_width, new_height int ) *sdl.Surface
 		srcpix := src_surf.Pixels()
 		dstpix := newsurf.Pixels()
 		/* handle trivial case */
-		if src_surf.W == new_width && src_surf.H == new_height {
+		if int(src_surf.W) == new_width && int(src_surf.H) == new_height {
 			srcaddr:=0
 			dstaddr:=0
 			for y:=0;y<new_height;y++ {
-				srcaddr = y*newsurf.Pitch
-				dstaddr = y*surf.Pitch
+				srcaddr = y*int(newsurf.Pitch)
+				dstaddr = y*int(src_surf.Pitch)
 				
 				for x:=0;x<new_width*bpp;x++ {
-					dstpix[dstaddr+x] = srcaddr[srcaddr+x]
+					dstpix[dstaddr+x] = srcpix[srcaddr+x]
 				}
 			}
 			

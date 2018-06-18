@@ -21,7 +21,7 @@ func ColorSurface(surf *sdl.Surface,col *color.Color) {
 	pixels := surf.Pixels()
 
 	for i:= 0; i< surf.PixelNum(); i++ {
-		for j=0;j< bytes_per_pixel;j++ {
+		for j:=0;j< bytes_per_pixel;j++ {
 			pixels[i*bytes_per_pixel+j] = color_bytes[j]
 		}
 	}
