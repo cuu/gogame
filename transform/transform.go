@@ -661,5 +661,5 @@ func SmoothScale(src_surf *sdl.Surface, new_width, new_height int ) *sdl.Surface
 		newsurf.Unlock()
 	}
 	
-	return nil
+	return newsurf
 }
