@@ -224,7 +224,7 @@ func filter_shrink_X_ONLYC(srcpix []byte, dstpix []byte, height,srcpitch,dstpitc
 	dstaddr := 0
 	
 	xspace := 0x10000 * srcwidth/dstwidth // must be > 1
-	xrecip :=  int(0x100000000 / xspace)
+	xrecip :=  int(int64(0x100000000) / int64(xspace))
 	for y := 0; y < height; y++ {
 		var accumulate [4]uint16
 		xcounter := xspace
@@ -290,7 +290,7 @@ func filter_shrink_Y_ONLYC(srcpix []byte, dstpix []byte,  width,  srcpitch,  dst
 	*/
 	
 	yspace := 0x10000 * srcheight/dstheight // must be > 1
-	yrecip := int(0x100000000 / yspace) // int may overflow
+	yrecip := int(int64(0x100000000) / int64(yspace)) // int may overflow
 	ycounter := yspace
 
 	templine_addr := 0

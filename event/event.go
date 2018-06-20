@@ -416,7 +416,7 @@ func Post(event_name int, dict string ) {
 	if err != nil {
 		log.Fatalf("PushEvent error %s",err)
 	}else {
-		fmt.Println("Filtered : ", f)
+		fmt.Sprintf("Filtered : %s", f)
 	}
 	
 }

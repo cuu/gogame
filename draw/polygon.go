@@ -1,7 +1,7 @@
 package draw
 
 import (
-	"fmt"
+//	"fmt"
 //	"math"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/cuu/gogame/color"
@@ -74,7 +74,7 @@ func draw_fillpoly(surf *sdl.Surface, vx []int, vy []int, numpoints int, col *co
 			}
 			
 			if ( y >= y1) && (y < y2 ) {
-				fmt.Println("ints : ",ints)
+//				fmt.Println("ints : ",ints)
 				polyints[ints] = (y-y1) * (x2-x1) / (y2-y1) + x1
 				ints+=1
 				
