@@ -24,9 +24,6 @@ const (
 
 )
 
-const (
-	RUNEVT = 1 // start from 1  ,add CUSTOM event id here ,also append AddCustomEvent  in init blow
-)
 
 type CustomEvs struct {
 	Type uint32
@@ -349,9 +346,6 @@ func init() {
 	TheEvent.Clear()
 
 	CUSTOMEVS = make(map[int]*CustomEvs)
-
-	AddCustomEvent(RUNEVT) // Append Custom event id as above 
-
 	
 	f := &Filter{}
 	sdl.SetEventFilter(f,nil)

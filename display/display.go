@@ -34,6 +34,28 @@ func Init() bool {
   return Inited 
 }
 
+func GetWindow() *sdl.Window {
+    
+    return window
+}
+
+func SetWindowPos(win*sdl.Window, x,y int) {
+    win.SetPosition(int32(x), int32(y))
+}
+
+func GetWindowPos(win*sdl.Window) (int,int) {
+        x,y := win.GetPosition()
+        
+        return int(x),int(y)
+}
+
+func SetWindowTitle(win*sdl.Window, tit string) {
+    win.SetTitle(tit)
+}
+
+func SetWindowOpacity(win*sdl.Window, op float64) {
+    win.SetWindowOpacity(float32(op))
+}
 
 func SetMode(w,h,flags,depth int32) *sdl.Surface {
 	var err error
