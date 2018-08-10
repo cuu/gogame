@@ -6,7 +6,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 
 	"github.com/cuu/gogame/event"
-//	"time"
+	gotime "time"
 )
 
 
@@ -27,4 +27,8 @@ func BlockDelay( dur int ) {
 	sdl.Delay( uint32(dur))
 	event.Resume()
 
+}
+
+func Unix() int32 {
+    return int32(gotime.Now().Unix())
 }

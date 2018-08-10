@@ -57,6 +57,10 @@ func SetWindowOpacity(win*sdl.Window, op float64) {
     win.SetWindowOpacity(float32(op))
 }
 
+func SetWindowBordered(win*sdl.Window, b bool) {
+    win.SetBordered(b)
+}
+
 func SetMode(w,h,flags,depth int32) *sdl.Surface {
 	var err error
 	var surf *sdl.Surface
