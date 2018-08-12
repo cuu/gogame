@@ -1,6 +1,7 @@
 package display
 
 import (
+    //"fmt"
 	"os"
 	
 	"github.com/veandco/go-sdl2/sdl"
@@ -61,6 +62,10 @@ func SetWindowBordered(win*sdl.Window, b bool) {
     win.SetBordered(b)
 }
 
+func SetX11WindowOnTop() {
+    
+}
+
 func SetMode(w,h,flags,depth int32) *sdl.Surface {
 	var err error
 	var surf *sdl.Surface
@@ -68,13 +73,17 @@ func SetMode(w,h,flags,depth int32) *sdl.Surface {
 	
 	sdl.Do(func() {
 		video_centered := os.Getenv("SDL_VIDEO_CENTERED")
-		if video_centered == "1" {
-			window, err = sdl.CreateWindow("gogame", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
-				w, h, uint32( gogame.SHOWN | flags))
-		}else {
-			window, err = sdl.CreateWindow("gogame", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
-				w, h, uint32( gogame.SHOWN | flags))
-		}
+        if flags & gogame.FIRSTHIDDEN > 0{
+			window, err = sdl.CreateWindow("gogame", -w, -h,w, h, uint32( gogame.SHOWN | (flags &(^gogame.FIRSTHIDDEN))))
+        }else {
+            if video_centered == "1" {
+                window, err = sdl.CreateWindow("gogame", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
+                    w, h, uint32( gogame.SHOWN | flags))
+            }else {
+                window, err = sdl.CreateWindow("gogame", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
+                    w, h, uint32( gogame.SHOWN | flags))
+            }
+        }
 		
 		if err != nil {
 			panic(err)
