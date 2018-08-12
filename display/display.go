@@ -74,7 +74,8 @@ func SetMode(w,h,flags,depth int32) *sdl.Surface {
 	sdl.Do(func() {
 		video_centered := os.Getenv("SDL_VIDEO_CENTERED")
         if flags & gogame.FIRSTHIDDEN > 0{
-			window, err = sdl.CreateWindow("gogame", -w, -h,w, h, uint32( gogame.SHOWN | (flags &(^gogame.FIRSTHIDDEN))))
+			window, err = sdl.CreateWindow("gogame", -w, -h,w, h,uint32(gogame.SHOWN |(flags&(^gogame.FIRSTHIDDEN))))
+            window.SetGrab(false)
         }else {
             if video_centered == "1" {
                 window, err = sdl.CreateWindow("gogame", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED,
