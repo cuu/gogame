@@ -12,11 +12,11 @@ import (
 
 
 func _aa_render_region(image *sdl.Renderer, _rect *sdl.Rect, col *color.Color, rad int) {
-	corners := rect.Inflate(_rect,-2*rad-1, -2*rad-1)
-	topleft := []int{ int(corners.X),int(corners.Y)}
-	topright := []int{int(corners.X+corners.W-1), int(corners.Y)}
-	bottomleft := []int{int(corners.X),  int(corners.Y+corners.H-1)}
-	bottomright := []int{int(corners.X+corners.W -1), int(corners.Y+corners.H-1)}
+	corners     := rect.Inflate(_rect,-2*rad-1, -2*rad-1)
+	topleft     := []int{int(corners.X),int(corners.Y)}
+	topright    := []int{int(corners.X+corners.W), int(corners.Y)}
+	bottomleft  := []int{int(corners.X),  int(corners.Y+corners.H)}
+	bottomright := []int{int(corners.X+corners.W ), int(corners.Y+corners.H)}
 
 	attributes :=[][]int{topleft, topright, bottomleft, bottomright }
 
@@ -33,8 +33,8 @@ func _aa_render_region(image *sdl.Renderer, _rect *sdl.Rect, col *color.Color, r
 	}
 
 
-	r1 := rect.Inflate(_rect,-2*rad,0)
-	r2 := rect.Inflate(_rect,0,-2*rad)
+	r1 := rect.Inflate(_rect, -2*rad,      0)
+	r2 := rect.Inflate(_rect, 0,      -2*rad)
 	
 	image.FillRect( &r1 ) // main body except four circles in corners
 	image.FillRect( &r2 ) // fix gap between circles of up and down vertical
