@@ -2,7 +2,8 @@ package font
 
 import (
 	"fmt"
-	
+	"bytes"
+  
 	"github.com/veandco/go-sdl2/ttf"
 	"github.com/veandco/go-sdl2/sdl"
 
@@ -126,7 +127,7 @@ func Render(fnt *ttf.Font,text string,antialias bool,col *color.Color, backgroun
   var err error
 	
 	just_return := 0
-	if text == ""  {
+	if text == "" || bytes.Equal( []byte(text),[]byte{0} ) {
 		just_return = 1
 	}
 
@@ -139,25 +140,26 @@ func Render(fnt *ttf.Font,text string,antialias bool,col *color.Color, backgroun
 		}else {
 			surf.SetColorKey(true,0)
 		}
+    return surf
 	}
 	
 	if antialias == true {
 		if background != nil {
 			surf,err = fnt.RenderUTF8Shaded(text, col.ToSDL(), background.ToSDL())
 			if err != nil {
-				panic(fmt.Sprintf("%s Render failed  %s", fnt.FaceFamilyName(), ttf.GetError()))
+				panic(fmt.Sprintf("%s Render failed  %s,%v,%d", fnt.FaceFamilyName(), ttf.GetError(),[]byte(text),len(text)))
 			}			
 		}else {
 			surf,err = fnt.RenderUTF8Blended(text, col.ToSDL())
 			if err != nil {
-				panic(fmt.Sprintf("%s Render failed  %s", fnt.FaceFamilyName(), ttf.GetError()))
+				panic(fmt.Sprintf("%s Render failed  %s,%v,%d", fnt.FaceFamilyName(), ttf.GetError(),[]byte(text),len(text)))
 			}
 		}
 	
 	}else {
 		surf,err = fnt.RenderUTF8Solid(text, col.ToSDL())
 		if err != nil {
-			panic(fmt.Sprintf("%s Render failed  %s", fnt.FaceFamilyName(), ttf.GetError()))
+			panic(fmt.Sprintf("%s Render failed  %s,%v,%d", fnt.FaceFamilyName(), ttf.GetError(),[]byte(text),len(text)))
 		}
 	}
 
