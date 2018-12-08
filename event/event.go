@@ -271,6 +271,8 @@ sdl.K_EJECT:"Eject",
 sdl.K_SLEEP:"Sleep",
 }
 
+var SDL_My_Event = uint32(0)
+
 type Filter struct {
 	
 }
@@ -318,6 +320,9 @@ func ResetCustomEventData(evid int) {
 		CUSTOMEVS[evid].Data = ""
 	}
 }
+func AllocEvents(event_number int) {
+  SDL_My_Event = sdl.RegisterEvents(event_number)
+}
 
 func AddCustomEvent(evid int) {
 	if CUSTOMEVS == nil {
@@ -333,8 +338,8 @@ func AddCustomEvent(evid int) {
 	}
 
 	CUSTOMEVS[evid] = &CustomEvs{}
-	CUSTOMEVS[evid].Type = sdl.RegisterEvents(evid)
-	
+	CUSTOMEVS[evid].Type = uint32(evid)
+  
 }
 
 func init() {
@@ -403,7 +408,7 @@ func Post(event_name int, dict string ) {
 	}
 	
 	uev := &sdl.UserEvent{}
-	uev.Type = event_type
+	uev.Type = SDL_My_Event
 	uev.Code = int32(event_name)
 
 	f,err := sdl.PushEvent(uev)
@@ -411,7 +416,8 @@ func Post(event_name int, dict string ) {
 	if err != nil {
 		log.Fatalf("PushEvent error %s",err)
 	}else {
-		fmt.Sprintf("Filtered : %s", f)
+		fmt.Println( fmt.Sprintf("gogame Event Post Filtered : %s", f) )
+    
 	}
 	
 }
