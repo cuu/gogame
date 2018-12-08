@@ -361,6 +361,7 @@ func map_events( event sdl.Event) *Event {
 		case *sdl.UserEvent:
 			ret.Type = USEREVENT
 			idx:= int(t.Code)
+      ret.Code = int32(idx)
 			ret.Data["Msg"] = CUSTOMEVS[idx].Data
 			ResetCustomEventData(idx)
 		case *sdl.QuitEvent:
