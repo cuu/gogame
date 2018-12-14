@@ -66,6 +66,12 @@ func SetX11WindowOnTop() {
     
 }
 
+func GetCurrentMode( scr_index int) (mode sdl.DisplayMode, err error) {
+  
+  return sdl.GetCurrentDisplayMode(scr_index)
+
+}
+
 func SetMode(w,h,flags,depth int32) *sdl.Surface {
 	var err error
 	var surf *sdl.Surface
