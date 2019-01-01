@@ -434,11 +434,18 @@ func Resume() {
 func Poll() *Event {
 	var ret *Event
 	
-	sdl.Do(func() {
+	if pause == false {
 		event := sdl.PollEvent()
 		ret = map_events(event)
-	})
-
+	}else {
+		//fmt.Println("FlushEvent")
+		sdl.Do(func(){
+			sdl.FlushEvent(sdl.KEYDOWN)
+		})
+		TheEvent.Type = NOEVENT
+		ret = TheEvent
+	}
+  
 	return ret
 }
 
