@@ -418,7 +418,7 @@ func Post(event_name int, dict string ) {
     }else {
       fmt.Println( fmt.Sprintf("gogame Event Post Filtered : %s", f) )
     }
-	}
+	})
 }
 
 
