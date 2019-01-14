@@ -452,8 +452,10 @@ func Wait() *Event {
 	var ret *Event
 	
 	if pause == false {
-		event := sdl.WaitEvent()
-		ret = map_events(event)
+    sdl.Do(func() {
+      event := sdl.WaitEvent()
+      ret = map_events(event)
+    })
 	}else {
 		//fmt.Println("FlushEvent")
 		sdl.Do(func(){
