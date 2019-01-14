@@ -410,16 +410,15 @@ func Post(event_name int, dict string ) {
 	uev := &sdl.UserEvent{}
 	uev.Type = SDL_My_Event
 	uev.Code = int32(event_name)
+  sdl.Do(func(){
+    f,err := sdl.PushEvent(uev)
 
-	f,err := sdl.PushEvent(uev)
-
-	if err != nil {
-		log.Fatalf("PushEvent error %s",err)
-	}else {
-		fmt.Println( fmt.Sprintf("gogame Event Post Filtered : %s", f) )
-    
+    if err != nil {
+      log.Fatalf("PushEvent error %s",err)
+    }else {
+      fmt.Println( fmt.Sprintf("gogame Event Post Filtered : %s", f) )
+    }
 	}
-	
 }
 
 
