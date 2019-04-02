@@ -53,6 +53,30 @@ func Surface(w,h int) *sdl.Surface {
 
 	return surf
 }
+// Create a New 8bit color Surface
+func Surface8(w,h int) *sdl.Surface {
+	//flags=0, depth=0, masks=None
+	/*
+	Bit    7  6  5  4  3  2  1  0
+	Data   R  R  R  G  G  G  B  B
+	*/
+	//surf->PixelFormat->BitsPerPixel=8
+
+	Rmask := 0x0
+	Gmask := 0x0
+	Bmask := 0x0
+	Amask := 0x0
+	
+	flags := 0
+	depth := 8
+	
+	surf,err := sdl.CreateRGBSurface(uint32(flags),int32(w),int32(h), int32(depth), uint32(Rmask), uint32(Gmask), uint32(Bmask), uint32(Amask))
+	if err != nil {
+		panic( fmt.Sprintf("sdl.CreateRGBSurface 8bit failed %s",sdl.GetError()))
+	}
+
+	return surf
+}
 
 //dest represents coord on dst surface, shows where you want  put the source surface on dst 
 func Blit(dst *sdl.Surface, source *sdl.Surface, dest *sdl.Rect,area *sdl.Rect) sdl.Rect {
