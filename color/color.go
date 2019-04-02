@@ -11,6 +11,27 @@ type Color struct {
 	A uint32
 }
 
+func NewColor(colors ...int) *Color {
+	color := &Color{0,0,0,255}
+
+	for i,c := range(colors) {
+		if i==0 {
+			color.R = uint32(c)
+		}
+		if i==1 {
+		  color.G = uint32(c)
+		}
+		if i==2 {
+			color.B = uint32(c)
+		}
+		if i==3 {
+			color.A = uint32(c)
+		}
+	}
+	
+	return color
+}
+
 func (c *Color) ToSDL() sdl.Color {
 	sdl_color := sdl.Color{0,0,0,0}
 
