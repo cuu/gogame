@@ -434,8 +434,10 @@ func Poll() *Event {
 	var ret *Event
 	
 	if pause == false {
-		event := sdl.PollEvent()
-		ret = map_events(event)
+    sdl.Do(func() {
+		  event := sdl.PollEvent()
+		  ret = map_events(event)
+    })
 	}else {
 		//fmt.Println("FlushEvent")
 		sdl.Do(func(){

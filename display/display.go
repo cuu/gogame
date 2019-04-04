@@ -35,6 +35,12 @@ func Init() bool {
   return Inited 
 }
 
+func Destroy() {
+  if window != nil {
+    window.Destroy()
+  }
+}
+
 func GetWindow() *sdl.Window {
     
     return window
@@ -70,6 +76,10 @@ func GetCurrentMode( scr_index int) (mode sdl.DisplayMode, err error) {
   
   return sdl.GetCurrentDisplayMode(scr_index)
 
+}
+
+func GetSurface() *sdl.Surface {
+	return big_surface
 }
 
 func SetMode(w,h,flags,depth int32) *sdl.Surface {

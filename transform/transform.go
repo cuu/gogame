@@ -23,7 +23,7 @@ func newsurf_fromsurf(surf *sdl.Surface, width ,height int) (*sdl.Surface,error)
 		return nil,errors.New("unsupport Surface bit depth for transform")
 	}
 
-	newsurf,err := sdl.CreateRGBSurface(0,int32(width),int32(height),32,
+	newsurf,err := sdl.CreateRGBSurface(0,int32(width),int32(height),int32(surf.Format.BitsPerPixel),
 		surf.Format.Rmask, surf.Format.Gmask, surf.Format.Bmask, surf.Format.Amask)
 	if err != nil {
 		panic( fmt.Sprintf("newsurf_fromsurf failed %s",sdl.GetError()))
