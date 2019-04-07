@@ -3,8 +3,8 @@ package draw
 import (
 //	"fmt"
 //	"math"
-	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/gfx"
+	"github.com/cuu/go-sdl2/sdl"
+	"github.com/cuu/go-sdl2/gfx"
 
 	"github.com/cuu/gogame/color"
 	"github.com/cuu/gogame/rect"

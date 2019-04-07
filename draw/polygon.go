@@ -3,7 +3,7 @@ package draw
 import (
 //	"fmt"
 //	"math"
-	"github.com/veandco/go-sdl2/sdl"
+	"github.com/cuu/go-sdl2/sdl"
 	"github.com/cuu/gogame/color"
 	"github.com/cuu/gogame/rect"
 	"github.com/cuu/gogame/qsort"

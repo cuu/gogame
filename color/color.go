@@ -1,7 +1,7 @@
 package color
 
 import (
-	"github.com/veandco/go-sdl2/sdl"
+	"github.com/cuu/go-sdl2/sdl"
 )
 
 type Color struct {

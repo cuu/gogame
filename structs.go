@@ -1,4 +1,4 @@
 package gogame
 
-//import "github.com/veandco/go-sdl2/sdl"
+//import "github.com/cuu/go-sdl2/sdl"
 
