@@ -663,3 +663,81 @@ func SmoothScale(src_surf *sdl.Surface, new_width, new_height int ) *sdl.Surface
 	
 	return newsurf
 }
+
+func Flip(src_surf *sdl.Surface, xflip ,yflip bool )  *sdl.Surface {
+	if src_surf == nil {
+		return src_surf
+	}
+	
+	newsurf,_ := newsurf_fromsurf(src_surf, int(src_surf.W),int(src_surf.H))
+	if newsurf.W != src_surf.W || newsurf.H != src_surf.H {
+		panic("Flip destination surface create failed")
+	}
+  
+  pixsize := src_surf.BytesPerPixel()
+  srcpitch := int(src_surf.Pitch)
+  dstpitch := int(newsurf.Pitch)
+  
+  newsurf.Lock()
+  src_surf.Lock()
+  
+  srcpix := src_surf.Pixels()
+  dstpix := newsurf.Pixels()
+  
+  if xflip == false {
+    if yflip == false { // x and y not flip
+      copy(dstpix,srcpix)
+    }else { // only yflip
+      for loopy :=0;loopy < int(src_surf.H);loopy++ {
+        for j:=0;j<srcpitch;j++ {
+          dstpix[ j + loopy*srcpitch] =  srcpix[ j + (int(src_surf.H)-1-loopy)*srcpitch]
+        }
+      }
+    }
+  }else { // xflip
+    
+    if yflip == true { // x and y both flip
+      switch(pixsize){
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+          for loopy :=0;loopy < int(src_surf.H);loopy++ {
+            dstaddr := loopy*dstpitch
+            srcaddr  := ((int(src_surf.H) -1 -loopy)*srcpitch)+int(src_surf.W) -1
+            for loopx :=0;loopx < int(src_surf.W)*pixsize;loopx+=pixsize {
+              for u:=0;u<pixsize;u++{
+                dstpix[dstaddr+u] = srcpix[srcaddr+u]
+              }
+              dstaddr+=pixsize
+              srcaddr-=pixsize
+            }
+          }
+      }
+    }else {//only xflip,y not flip
+      switch(pixsize) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+          for loopy :=0;loopy < int(src_surf.H);loopy++ {
+            dstaddr := loopy*dstpitch
+            srcaddr := loopy*srcpitch+int(src_surf.W)-1
+            for loopx:=0;loopx < int(src_surf.W)*pixsize;loopx+=pixsize {
+              for u:=0;u<pixsize;u++ {
+                dstpix[dstaddr+u] = srcpix[srcaddr+u]
+              }
+              dstaddr+=pixsize
+              srcaddr-=pixsize
+            }
+          }
+      }
+    }
+    
+  }
+  
+  src_surf.Unlock()
+	newsurf.Unlock()
+  
+  return newsurf
+}
