@@ -675,8 +675,8 @@ func Flip(src_surf *sdl.Surface, xflip ,yflip bool )  *sdl.Surface {
 	}
   
   pixsize := src_surf.BytesPerPixel()
-  srcpitch := int(src_surf.Pitch)
-  dstpitch := int(newsurf.Pitch)
+  //srcpitch := int(src_surf.Pitch)
+  //dstpitch := int(newsurf.Pitch)
   
   newsurf.Lock()
   src_surf.Lock()
@@ -688,9 +688,11 @@ func Flip(src_surf *sdl.Surface, xflip ,yflip bool )  *sdl.Surface {
     if yflip == false { // x and y not flip
       copy(dstpix,srcpix)
     }else { // only yflip
+      _pitch := 0
       for loopy :=0;loopy < int(src_surf.H);loopy++ {
-        for j:=0;j<srcpitch;j++ {
-          dstpix[ j + loopy*srcpitch] =  srcpix[ j + (int(src_surf.H)-1-loopy)*srcpitch]
+        _pitch = int(src_surf.W)*pixsize;
+        for loopx :=0;loopx <_pitch;loopx++ {
+          dstpix[loopx + loopy*_pitch] =  srcpix[ loopx + (int(src_surf.H)-1-loopy)*_pitch]
         }
       }
     }
@@ -703,14 +705,15 @@ func Flip(src_surf *sdl.Surface, xflip ,yflip bool )  *sdl.Surface {
         case 3:
         case 4:
           for loopy :=0;loopy < int(src_surf.H);loopy++ {
-            dstaddr := loopy*dstpitch
-            srcaddr  := ((int(src_surf.H) -1 -loopy)*srcpitch)+int(src_surf.W) -1
-            for loopx :=0;loopx < int(src_surf.W)*pixsize;loopx+=pixsize {
+            dstaddr := loopy*(int(newsurf.W))
+            srcaddr := ((int(src_surf.H) -1 -loopy)*(int(src_surf.W)))+int(src_surf.W) -1
+            for loopx :=0;loopx < int(src_surf.W);loopx++ {
               for u:=0;u<pixsize;u++{
-                dstpix[dstaddr+u] = srcpix[srcaddr+u]
+                //fmt.Println(dstaddr, srcaddr,pixsize)
+                dstpix[dstaddr*pixsize+u] = srcpix[srcaddr*pixsize+u]
               }
-              dstaddr+=pixsize
-              srcaddr-=pixsize
+              dstaddr+=1
+              srcaddr-=1
             }
           }
       }
@@ -721,14 +724,14 @@ func Flip(src_surf *sdl.Surface, xflip ,yflip bool )  *sdl.Surface {
         case 3:
         case 4:
           for loopy :=0;loopy < int(src_surf.H);loopy++ {
-            dstaddr := loopy*dstpitch
-            srcaddr := loopy*srcpitch+int(src_surf.W)-1
-            for loopx:=0;loopx < int(src_surf.W)*pixsize;loopx+=pixsize {
+            dstaddr := loopy*(int(newsurf.W))
+            srcaddr := loopy*(int(src_surf.W))+int(src_surf.W)-1
+            for loopx:=0;loopx < int(src_surf.W);loopx++ {
               for u:=0;u<pixsize;u++ {
-                dstpix[dstaddr+u] = srcpix[srcaddr+u]
+                dstpix[dstaddr*pixsize+u] = srcpix[srcaddr*pixsize+u]
               }
-              dstaddr+=pixsize
-              srcaddr-=pixsize
+              dstaddr+=1
+              srcaddr-=1
             }
           }
       }

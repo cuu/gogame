@@ -66,9 +66,9 @@ func Delay( dur int ) {
 
 func BlockDelay( dur int ) {
 
-	event.Pause()		
-	sdl.Delay( uint32(dur))
-	event.Resume()
+	event.Pause()	
+  sdl.Delay( uint32(dur))
+  event.Resume()
 
 }
 
