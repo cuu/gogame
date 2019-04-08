@@ -1,7 +1,7 @@
 package rect
 
 import (
-	"github.com/veandco/go-sdl2/sdl"
+	"github.com/cuu/go-sdl2/sdl"
 )
 
 func NewRect(coords ...int) *sdl.Rect {

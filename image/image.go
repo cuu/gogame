@@ -2,8 +2,8 @@ package image
 
 import (
 	"fmt"
-	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/img"
+	"github.com/cuu/go-sdl2/sdl"
+	"github.com/cuu/go-sdl2/img"
 
 )
 
