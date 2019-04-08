@@ -541,3 +541,25 @@ func drawvertline(surf *sdl.Surface, col *color.Color, x1,y1,y2 int) {
 	
 }
 
+func drawvertlineclip(surf *sdl.Surface, col *color.Color, x1,y1,y2 int) {
+  
+  if x1 < int(surf.ClipRect.X) || x1 >= int(surf.ClipRect.X + surf.ClipRect.W) {
+    return
+  }
+
+  if y2 < y1 {
+    temp := y1
+    y1 = y2
+    y2 = temp
+  }
+  
+  y1 = max(y1,int(surf.ClipRect.Y))
+  y2 = min(y2,int(surf.ClipRect.Y + surf.ClipRect.H-1))
+  
+  if y2 -y1 < 1{
+    pixel(surf,col,x1,y1)
+  }else{
+    drawvertline(surf,col,x1,y1,y2)
+  }
+}
+
