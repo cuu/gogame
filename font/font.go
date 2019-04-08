@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"bytes"
   
-	"github.com/cuu/go-sdl2/ttf"
-	"github.com/cuu/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/ttf"
+	"github.com/veandco/go-sdl2/sdl"
 
 	"github.com/cuu/gogame/color"
 	"github.com/cuu/gogame/surface"	

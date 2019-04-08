@@ -2,7 +2,7 @@ package utils
 
 import (
 	"log"
-	"github.com/cuu/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/sdl"
 	"github.com/cuu/gogame/color"
 )
 
