@@ -3,6 +3,7 @@ package time
 import (
 //"sync"
 	//"fmt"
+  "math"
 	"github.com/veandco/go-sdl2/sdl"
 
 	"github.com/cuu/gogame/event"
@@ -24,13 +25,13 @@ func NewClock() *Clock {
 }
 
 func (self *Clock) Tick(framerate ...int) int {
-	_framerate := 0
+	_framerate := 30
 	if len(framerate) >  0 {
 		_framerate = framerate[0]
 	}
 	
-	speed := 1.0/float64(_framerate)
-	speed = speed * 1000.0
+	speed := 1000.0/float64(_framerate)
+	//speed = speed * 1000.0
 
 	now := gotime.Now()
 
@@ -42,7 +43,7 @@ func (self *Clock) Tick(framerate ...int) int {
     
 		if delta_ms < int(speed ){
       //fmt.Println("block delayed",delta_ms,speed)
-			BlockDelay(int(speed) - delta_ms)
+			SDL_Delay(int(math.Floor(speed)))
 		}else {
       
       //fmt.Println("No block delayed",delta_ms,speed)
@@ -62,6 +63,10 @@ func Delay( dur int ) {
 
 	}()
 	
+}
+
+func SDL_Delay( dur int ) {
+  sdl.Delay( uint32(dur))
 }
 
 func BlockDelay( dur int ) {
