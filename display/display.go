@@ -120,9 +120,25 @@ func SetMode(w,h,flags,depth int32) *sdl.Surface {
 	return big_surface
 }
 
-func Flip(  ) {
+func UpdateWindowSurface() {
+  sdl.Do(func(){
+    if win_surface != nil && big_surface != nil {
+      surface.Blit(win_surface,big_surface, nil,nil)
+    }
+  })
+}
+
+func UpdateWindow() {
+  sdl.Do(func() {
+		if window != nil {
+			window.UpdateSurface()
+		}
+  })
+}
+
+func Flip() {
 	sdl.Do(func() {
-		if win_surface != nil && big_surface != nil {
+  	if win_surface != nil && big_surface != nil {
 			surface.Blit(win_surface,big_surface, nil,nil)
 		}
 		if window != nil {
