@@ -58,6 +58,7 @@ func AARoundRect(surf *sdl.Surface,_rect *sdl.Rect,col *color.Color,rad,border i
 	}
 
 	//image.Present()
+  image.Destroy()
 }
 
 func Point(surf *sdl.Surface, c *color.Color, x,y int) {
