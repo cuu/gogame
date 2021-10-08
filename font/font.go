@@ -127,7 +127,7 @@ func Render(fnt *ttf.Font,text string,antialias bool,col *color.Color, backgroun
   var err error
 	
 	just_return := 0
-	if text == "" || bytes.Equal( []byte(text),[]byte{0} ) {
+	if len(text) == 0 || text == "" || bytes.Equal( []byte(text),[]byte{0} ) {
 		just_return = 1
 	}
 
