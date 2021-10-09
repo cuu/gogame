@@ -9,6 +9,7 @@ import (
 
 	"github.com/cuu/gogame/color"
 	"github.com/cuu/gogame/surface"	
+	"github.com/cuu/gogame/utils"
 )
 /*
 const (
@@ -115,7 +116,6 @@ func LineSize(fnt *ttf.Font) int {
 	return fnt.LineSkip()
 }
 
-
 //Only UTF8 
 func Render(fnt *ttf.Font,text string,antialias bool,col *color.Color, background *color.Color) *sdl.Surface {
 	/*
@@ -124,10 +124,10 @@ func Render(fnt *ttf.Font,text string,antialias bool,col *color.Color, backgroun
 	}
   */
 	var surf *sdl.Surface
-  var err error
-	
+	var err error
+
 	just_return := 0
-	if len(text) == 0 || text == "" || bytes.Equal( []byte(text),[]byte{0} ) {
+	if len(text) == 0 || text == "" || bytes.Equal( []byte(text),[]byte{0} ) || utils.AllZeroByte([]byte(text)) {
 		just_return = 1
 	}
 

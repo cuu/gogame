@@ -1,0 +1,4 @@
+github.com/cuu/gogame v0.0.0-20211008162135-fc03a0d3b3d1 h1:7bf2pXpnfRQz7XcJJTIuz/5lGaD75Iu7xmbHscfWK7k=
+github.com/cuu/gogame v0.0.0-20211008162135-fc03a0d3b3d1/go.mod h1:gCpgs2cddW1XU/owVN8IeY6PhPOsvj2qhXFduLhSgDc=
+github.com/veandco/go-sdl2 v0.4.10 h1:8QoD2bhWl7SbQDflIAUYWfl9Vq+mT8/boJFAUzAScgY=
+github.com/veandco/go-sdl2 v0.4.10/go.mod h1:OROqMhHD43nT4/i9crJukyVecjPNYYuCofep6SNiAjY=
