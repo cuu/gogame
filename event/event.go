@@ -276,12 +276,12 @@ type Filter struct {
 func (self *Filter) FilterEvent(e sdl.Event, userdata interface{}) bool {
 	if pause == true {
 		sdl.FlushEvent(sdl.KEYDOWN)
+		sdl.FlushEvent(sdl.KEYUP)
 		return false
 	} else {
 		return true
 	}
 }
-
 type Event struct {
 	Type      uint32
 	Timestamp uint32 // timestamp of the event
@@ -383,8 +383,9 @@ func map_events(event sdl.Event) *Event {
 			//			fmt.Printf("unknow type %T\n", t)
 			ret.Type = NOEVENT
 		}
+	  return ret
 	}
-
+	ret.Clear()
 	return ret
 }
 
@@ -414,26 +415,49 @@ func Post(event_name int, dict string) {
 	}
 }
 
-func Pause() {
-	pause = true
+func Pause(ev_type uint32) {
+	
+	sdl.EventState(ev_type,sdl.IGNORE)
 }
 
-func Resume() {
-	pause = false
+func Resume(ev_type uint32) {
+	sdl.EventState(ev_type,sdl.ENABLE)
+}
+
+func Clear(type_ uint32) {
+  sdl.FlushEvent(type_)
+}
+
+func Peep(pump bool,start uint32 ,end uint32 ) int {
+  	var peepArray []sdl.Event = make([]sdl.Event, 5)
+
+	if pump == true {
+		sdl.PumpEvents()
+	}
+
+	numEventsRetrieved,err := sdl.PeepEvents(peepArray, sdl.PEEKEVENT, start, end)
+	if err == nil {
+		if numEventsRetrieved < 0 {
+			fmt.Printf("PeepEvents error: %s\n", sdl.GetError())
+		} else {
+			/*
+			for i := 0; i < numEventsRetrieved; i++ {
+				fmt.Printf("Event Peeked Value: %v\n", peepArray[i]) // primitive printing of event
+			}
+			*/
+		}
+	}else {
+		fmt.Println(err)
+	}
+
+	return numEventsRetrieved
 }
 
 func Poll() *Event {
 	var ret *Event
 
-	if pause == false {
-		event := sdl.PollEvent()
-		ret = map_events(event)
-	} else {
-		//fmt.Println("FlushEvent")
-		sdl.FlushEvent(sdl.KEYDOWN)
-		TheEvent.Type = NOEVENT
-		ret = TheEvent
-	}
+	event := sdl.PollEvent()
+	ret = map_events(event)
 
 	return ret
 }
@@ -441,15 +465,8 @@ func Poll() *Event {
 func Wait() *Event {
 	var ret *Event
 
-	if pause == false {
-		event := sdl.WaitEvent()
-		ret = map_events(event)
-	} else {
-		//fmt.Println("FlushEvent")
-		sdl.FlushEvent(sdl.KEYDOWN)
-		TheEvent.Type = NOEVENT
-		ret = TheEvent
-	}
+	event := sdl.WaitEvent()
+	ret = map_events(event)
 
 	return ret
 }

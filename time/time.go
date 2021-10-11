@@ -56,9 +56,9 @@ func (self *Clock) Tick(framerate ...int) int {
 func Delay(dur int) {
 
 	go func() {
-		event.Pause()
+		event.Pause(sdl.KEYDOWN)
 		sdl.Delay(uint32(dur))
-		event.Resume()
+		event.Resume(sdl.KEYDOWN)
 
 	}()
 
@@ -70,9 +70,9 @@ func SDL_Delay(dur int) {
 
 func BlockDelay(dur int) {
 
-	event.Pause()
+	event.Pause(sdl.KEYDOWN)
 	sdl.Delay(uint32(dur))
-	event.Resume()
+	event.Resume(sdl.KEYDOWN)
 
 }
 
