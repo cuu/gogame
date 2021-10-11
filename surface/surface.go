@@ -28,9 +28,7 @@ func Fill(surface *sdl.Surface, col *color.Color) {
 
 func FillRect(surface *sdl.Surface,rect *sdl.Rect, color uint32) {
 	
-	sdl.Do(func() {
-		surface.FillRect(rect,color)
-	})
+	surface.FillRect(rect,color)
 	
 	return
 }

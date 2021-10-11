@@ -410,7 +410,6 @@ func Post(event_name int, dict string ) {
 	uev := &sdl.UserEvent{}
 	uev.Type = SDL_My_Event
 	uev.Code = int32(event_name)
-  sdl.Do(func(){
     f,err := sdl.PushEvent(uev)
 
     if err != nil {
@@ -418,7 +417,6 @@ func Post(event_name int, dict string ) {
     }else {
       fmt.Println( fmt.Sprintf("gogame Event Post Filtered : %s", f) )
     }
-	})
 }
 
 
@@ -434,15 +432,11 @@ func Poll() *Event {
 	var ret *Event
 	
 	if pause == false {
-    sdl.Do(func() {
 		  event := sdl.PollEvent()
 		  ret = map_events(event)
-    })
 	}else {
 		//fmt.Println("FlushEvent")
-		sdl.Do(func(){
 			sdl.FlushEvent(sdl.KEYDOWN)
-		})
 		TheEvent.Type = NOEVENT
 		ret = TheEvent
 	}
@@ -454,15 +448,11 @@ func Wait() *Event {
 	var ret *Event
 	
 	if pause == false {
-    sdl.Do(func() {
       event := sdl.WaitEvent()
       ret = map_events(event)
-    })
 	}else {
 		//fmt.Println("FlushEvent")
-		sdl.Do(func(){
 			sdl.FlushEvent(sdl.KEYDOWN)
-		})
 		TheEvent.Type = NOEVENT
 		ret = TheEvent
 	}

@@ -23,14 +23,12 @@ func AssertInited() {
 
 func Init() bool {
 	
-	sdl.Do(func() {
 		
-		if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
-			panic(err)
-		}
+	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
+		panic(err)
+	}
 	
-		Inited = true
-	})
+	Inited = true
 	
   return Inited 
 }
@@ -87,7 +85,6 @@ func SetMode(w,h,flags,depth int32) *sdl.Surface {
 	var surf *sdl.Surface
 	AssertInited()
 	
-	sdl.Do(func() {
 		video_centered := os.Getenv("SDL_VIDEO_CENTERED")
         if flags & gogame.FIRSTHIDDEN > 0{
 			window, err = sdl.CreateWindow("gogame", -w, -h,w, h,uint32(gogame.SHOWN |(flags&(^gogame.FIRSTHIDDEN))))
@@ -115,36 +112,29 @@ func SetMode(w,h,flags,depth int32) *sdl.Surface {
 		big_surface = surface.Surface(int(win_surface.W),int(win_surface.H))
 
 		
-	})
 
 	return big_surface
 }
 
 func UpdateWindowSurface() {
-  sdl.Do(func(){
     if win_surface != nil && big_surface != nil {
       surface.Blit(win_surface,big_surface, nil,nil)
     }
-  })
 }
 
 func UpdateWindow() {
-  sdl.Do(func() {
 		if window != nil {
 			window.UpdateSurface()
 		}
-  })
 }
 
 func Flip() {
-	sdl.Do(func() {
   	if win_surface != nil && big_surface != nil {
 			surface.Blit(win_surface,big_surface, nil,nil)
 		}
 		if window != nil {
 			window.UpdateSurface()
 		}
-	})
 }
 		
 
