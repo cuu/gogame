@@ -8,7 +8,6 @@ package color
 import "testing"
 
 func TestColor(t *testing.T) {
-	c := &Color{244,124,244,0}
+	c := &Color{244, 124, 244, 0}
 	t.Logf("%x", c.ToHex())
 }
-
