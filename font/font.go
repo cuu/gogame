@@ -148,19 +148,19 @@ func Render(fnt *ttf.Font, text string, antialias bool, col *color.Color, backgr
 		if background != nil {
 			surf, err = fnt.RenderUTF8Shaded(text, col.ToSDL(), background.ToSDL())
 			if err != nil {
-				log.Fataln(fmt.Sprintf("%s Render failed  %s,%v,%d", fnt.FaceFamilyName(), ttf.GetError(), []byte(text), len(text)))
+				log.Fatalln(fmt.Sprintf("%s Render failed  %s,%v,%d", fnt.FaceFamilyName(), ttf.GetError(), []byte(text), len(text)))
 			}
 		} else {
 			surf, err = fnt.RenderUTF8Blended(text, col.ToSDL())
 			if err != nil {
-				log.Fataln(fmt.Sprintf("%s Render failed  %s,%v,%d", fnt.FaceFamilyName(), ttf.GetError(), []byte(text), len(text)))
+				log.Fatalln(fmt.Sprintf("%s Render failed  %s,%v,%d", fnt.FaceFamilyName(), ttf.GetError(), []byte(text), len(text)))
 			}
 		}
 
 	} else {
 		surf, err = fnt.RenderUTF8Solid(text, col.ToSDL())
 		if err != nil {
-			log.Fataln(fmt.Sprintf("%s Render failed  %s,%v,%d", fnt.FaceFamilyName(), ttf.GetError(), []byte(text), len(text)))
+			log.Fatalln(fmt.Sprintf("%s Render failed  %s,%v,%d", fnt.FaceFamilyName(), ttf.GetError(), []byte(text), len(text)))
 		}
 	}
 
