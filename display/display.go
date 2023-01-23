@@ -132,3 +132,9 @@ func Flip() {
 		window.UpdateSurface()
 	}
 }
+
+func ASync(f func()) {
+	sdl.Do(func() {
+		f()
+	})
+}
