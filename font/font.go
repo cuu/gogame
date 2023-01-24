@@ -77,6 +77,24 @@ func Font(filename string, size int) *ttf.Font {
 	return fnt
 }
 
+func FontRW(filename string, size int) *ttf.Font {
+	if ttf.WasInit() == false {
+		panic("Init Font by using font.Init() first")
+	}
+
+	if size < 1 {
+		size = 1
+	}
+
+	mem := sdl.RWFromFile(filename, "rb")
+	font, err := ttf.OpenFontRW(mem, 0, size)
+	if err != nil {
+		panic(fmt.Sprintf("OpenRW font %s failed %s", filename, err))
+	}
+
+	return font
+}
+
 func GetBold(fnt *ttf.Font) bool {
 	cur_style := fnt.GetStyle()
 
